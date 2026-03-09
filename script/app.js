@@ -72,33 +72,58 @@ priorityColor = "badge-warning"
 }
 
 
+// FIXED LABEL HANDLING
+const label =
+issue.label || issue.labels?.[0] || "No label"
+
+
 const card = document.createElement("div")
 
 card.className =
-`card bg-base-100 shadow ${border} cursor-pointer`
+`card bg-base-100 border border-base-200 shadow-sm ${border} cursor-pointer hover:shadow-md transition`
 
 
 card.innerHTML = `
 
-<div class="card-body">
+<div class="card-body gap-3">
 
-<h2 class="font-semibold">
-${issue.title}
-</h2>
+<div class="flex justify-between items-center">
 
-<p class="text-sm text-gray-500 line-clamp-2">
-${issue.description}
-</p>
-
-<div class="flex justify-between text-xs mt-2">
-
-<span>${issue.author}</span>
+<div class="w-9 h-9 bg-green-100 rounded-full flex items-center justify-center">
+<img src="/assets/Open-Status.png">
+</div>
 
 <span class="badge ${priorityColor}">
 ${issue.priority}
 </span>
 
 </div>
+
+
+<h2 class="font-semibold text-base">
+${issue.title}
+</h2>
+
+
+<p class="text-sm text-gray-500 line-clamp-2">
+${issue.description}
+</p>
+
+
+<div>
+<span class="badge badge-outline">
+${label}
+</span>
+</div>
+
+</div>
+
+
+<div class="border-t px-4 py-3 flex justify-between text-xs text-gray-500">
+
+<span>#${issue.id} by ${issue.author}</span>
+
+<span>${new Date(issue.createdAt).toLocaleDateString()}</span>
 
 </div>
 
@@ -169,7 +194,8 @@ console.error("Search error", error)
 }
 
 
-//  MODAL
+
+// OPEN MODAL
 async function openModal(id){
 
 try{
@@ -186,14 +212,20 @@ const issue = data.data
 document.getElementById("modalTitle").innerText = issue.title
 document.getElementById("modalDesc").innerText = issue.description
 document.getElementById("modalAuthor").innerText = issue.author
-document.getElementById("modalLabel").innerText = issue.label
-document.getElementById("modalAssignee").innerText = issue.assignee
+document.getElementById("modalLabel").innerText =
+issue.label || issue.labels?.[0] || "No label"
+
+document.getElementById("modalAssignee").innerText =
+issue.assignee || "Unassigned"
 
 
 const date = new Date(issue.createdAt).toLocaleDateString()
 
 document.getElementById("modalDate").innerText = date
 
+
+
+// STATUS
 const statusEl = document.getElementById("modalStatus")
 
 statusEl.innerText = issue.status
@@ -203,6 +235,9 @@ issue.status === "open"
 ? "badge badge-success"
 : "badge badge-secondary"
 
+
+
+// PRIORITY
 const priorityEl =
 document.getElementById("modalPriority")
 
@@ -219,6 +254,9 @@ priority === "high"
 
 
 
+
+
+
 document.getElementById("issueModal").showModal()
 
 }catch(error){
@@ -231,13 +269,12 @@ console.error("Issue load error", error)
 
 
 
-// CLOSE 
+// CLOSE MODAL
 function closeModal(){
 
 document.getElementById("issueModal").close()
 
 }
-
 
 
 
@@ -250,14 +287,17 @@ document.getElementById("issuesContainer")
 if(container){
 
 container.innerHTML =
-`<span class="loading loading-spinner loading-lg"></span>`
+`<div class="flex justify-center col-span-4">
+<span class="loading loading-spinner loading-lg"></span>
+</div>`
 
 }
 
 }
-// AUTO LOAD DATA
+
+
+
+// AUTO LOAD
 if(window.location.pathname.includes("app.html")){
-
 loadIssues()
-
 }
