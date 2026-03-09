@@ -239,3 +239,19 @@ document.getElementById("issueModal").close()
 }
 
 
+
+
+// LOADING SPINNER
+function showLoading(){
+
+const container =
+document.getElementById("issuesContainer")
+
+if(container){
+
+container.innerHTML =
+`<span class="loading loading-spinner loading-lg"></span>`
+
+}
+
+}
