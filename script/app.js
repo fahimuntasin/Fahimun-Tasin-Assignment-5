@@ -255,3 +255,9 @@ container.innerHTML =
 }
 
 }
+// AUTO LOAD DATA
+if(window.location.pathname.includes("app.html")){
+
+loadIssues()
+
+}
