@@ -225,7 +225,7 @@ document.getElementById("modalDate").innerText = date
 
 
 
-// STATUS
+
 const statusEl = document.getElementById("modalStatus")
 
 statusEl.innerText = issue.status
@@ -237,7 +237,7 @@ issue.status === "open"
 
 
 
-// PRIORITY
+
 const priorityEl =
 document.getElementById("modalPriority")
 
@@ -268,8 +268,6 @@ console.error("Issue load error", error)
 }
 
 
-
-// CLOSE MODAL
 function closeModal(){
 
 document.getElementById("issueModal").close()
@@ -277,8 +275,6 @@ document.getElementById("issueModal").close()
 }
 
 
-
-// LOADING SPINNER
 function showLoading(){
 
 const container =
