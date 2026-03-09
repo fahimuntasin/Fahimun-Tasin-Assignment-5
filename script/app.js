@@ -168,3 +168,74 @@ console.error("Search error", error)
 
 }
 
+
+//  MODAL
+async function openModal(id){
+
+try{
+
+const res = await fetch(
+`https://phi-lab-server.vercel.app/api/v1/lab/issue/${id}`
+)
+
+const data = await res.json()
+
+const issue = data.data
+
+
+document.getElementById("modalTitle").innerText = issue.title
+document.getElementById("modalDesc").innerText = issue.description
+document.getElementById("modalAuthor").innerText = issue.author
+document.getElementById("modalLabel").innerText = issue.label
+document.getElementById("modalAssignee").innerText = issue.assignee
+
+
+const date = new Date(issue.createdAt).toLocaleDateString()
+
+document.getElementById("modalDate").innerText = date
+
+const statusEl = document.getElementById("modalStatus")
+
+statusEl.innerText = issue.status
+
+statusEl.className =
+issue.status === "open"
+? "badge badge-success"
+: "badge badge-secondary"
+
+const priorityEl =
+document.getElementById("modalPriority")
+
+const priority = (issue.priority || "").toLowerCase()
+
+priorityEl.innerText = issue.priority
+
+priorityEl.className =
+priority === "high"
+? "badge badge-error"
+: priority === "medium"
+? "badge badge-warning"
+: "badge badge-info"
+
+
+
+document.getElementById("issueModal").showModal()
+
+}catch(error){
+
+console.error("Issue load error", error)
+
+}
+
+}
+
+
+
+// CLOSE 
+function closeModal(){
+
+document.getElementById("issueModal").close()
+
+}
+
+
