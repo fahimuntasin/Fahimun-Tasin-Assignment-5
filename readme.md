@@ -1,140 +1,141 @@
-## 1. var, let, and const
 
-These are all ways to declare a variable. The difference is about scope and whether you can reassign the value.
 
-`var` is the old way. It is function scoped, which means it leaks out of if blocks and loops. This causes bugs that are annoying to track down. Avoid it.
+## var, let, const
 
-`let` is block scoped. It stays inside the curly braces where you defined it. Use it when the value will change.
+`var` ta purano. Keu use kore na akhon. Problem holo eta block scope bujhe na, if/loop er baaire ber hoe jai. Ek bar bug khailei bujhbe keno avoid kore shobai.
 
-`const` is also block scoped, but you cannot reassign it after declaration. Use this by default.
+`let` use koro jodi value ta change hobe. `const` use koro baki shob jayga.
 
 ```js
-var x = 1             // avoid
-let count = 0         // use when value changes
-const name = "Tasin"  // use by default
+let count = 0
+count = count + 1  // fine
+
+const API_URL = "https://api.example.com"
+API_URL = "other"  // error dibe
 ```
 
-A simple rule: always reach for `const` first. If you find yourself needing to reassign, switch to `let`.
+Amar rule holo — shuru te `const` likhi, jodi error dey tahole `let` e change kori. `var` likhar dorkar nai.
 
 
 
-## 2. The Spread Operator (...)
+## Spread operator (...)
 
-The spread operator unpacks the contents of an array or object so you can use them somewhere else.
+Array ba object er contents ta onno jagay dhele dite chai? Spread use koro.
 
-Merging arrays:
 ```js
 const a = [1, 2, 3]
-const b = [4, 5, 6]
-const combined = [...a, ...b]
-// [1, 2, 3, 4, 5, 6]
+const b = [...a, 4, 5]
+// [1, 2, 3, 4, 5]
 ```
 
-Copying an array without sharing a reference:
-```js
-const original = [1, 2, 3]
-const copy = [...original]
-```
+Object e kaje laghe jodi kono property override korte chai:
 
-Merging objects, or overriding a property:
 ```js
 const user = { name: "Tasin", role: "user" }
 const admin = { ...user, role: "admin" }
 // { name: "Tasin", role: "admin" }
 ```
 
-It also works in function calls when you have an array but the function expects individual arguments:
+Copy korte gele eta khub useful, karon direct assign korle dujonta same memory point kore. Spread dile alag copy hoi.
+
 ```js
-const nums = [3, 1, 4]
-Math.max(...nums) // 4
+const original = [1, 2, 3]
+const copy = [...original]  // real copy
 ```
 
+---
 
+## map, filter, forEach
 
-## 3. map(), filter(), and forEach()
+Tinta method, tinta alag kaj. Ekta diye shobkichu korte gele confused hoye jao.
 
-All three iterate over an array. The difference is what they return and what they are meant for.
+**map** — protita item ke change kore notun array dey.
 
-**map** transforms every item and returns a new array of the same length.
 ```js
-const prices = [10, 20, 30]
-const withTax = prices.map(p => p * 1.1)
-// [11, 22, 33]
+const prices = [100, 200, 300]
+const after_discount = prices.map(p => p * 0.9)
+// [90, 180, 270]
 ```
 
-**filter** returns a new array containing only the items that passed your condition.
+**filter** — condition pass kora items rakhhe, baki ber kore dey.
+
 ```js
-const scores = [45, 80, 55, 90]
-const passing = scores.filter(s => s >= 60)
-// [80, 90]
+const marks = [35, 60, 45, 80]
+const passed = marks.filter(m => m >= 50)
+// [60, 80]
 ```
 
-**forEach** just runs a function for each item. It returns nothing. Use it when you want to do something like log, send a request, or update something outside the array.
+**forEach** — shudhu loop kore, kono notun array ferat dey na. Console log ba dom update er moto kajer jonno.
+
 ```js
-const names = ["Alice", "Bob"]
+const names = ["Alice", "Bob", "Charlie"]
 names.forEach(name => console.log(name))
 ```
 
-The main thing to remember: if you need the result as an array, use `map` or `filter`. If you just need to loop and do something, use `forEach`.
+Short version: result lagbe? `map` ba `filter`. Shudhu kichhu korte hobe? `forEach`.
 
+---
 
-## 4. Arrow Functions
+## Arrow functions
 
-Arrow functions are a shorter syntax for writing functions. They work the same way for most cases.
+Shudhu function likhhar shorter way. Beshi kichu na.
 
-Regular function:
 ```js
+// age likhhtam
 function add(a, b) {
   return a + b
 }
-```
 
-Arrow function:
-```js
+// ekhon likhi
 const add = (a, b) => a + b
 ```
 
-If there is only one parameter, the parentheses are optional:
+Ekta parameter thakle bracket lagbe na:
+
 ```js
 const double = n => n * 2
 ```
 
-If the body has more than one line, you need curly braces and an explicit return:
+Multi line hole curly brace ar return lagbe:
+
 ```js
-const greet = (name) => {
-  const message = "Hello, " + name
-  return message
+const greet = name => {
+  const msg = "hello " + name
+  return msg
 }
 ```
 
-One real difference worth knowing: arrow functions do not have their own `this`. They inherit it from wherever they were defined. This matters when writing methods inside classes or working with event listeners, but for most everyday use you will not notice it.
+Ekta parthokko ache — arrow function er nijer `this` nai, parent er theke inherit kore. Classes ba event listener e mathai rakhha lagbe, otherwise normally khayal korte hobe na.
 
+---
 
-## 5. Template Literals
+## Template literals
 
-Template literals let you write strings with backticks instead of quotes. The main benefit is that you can embed variables and expressions directly into the string using `${}`.
+Backtick diye string likhle `${}` er modhhe variable ba expression direct rakhha jai. Plus sign diye jora lagbe na aar.
 
-Old way:
 ```js
 const name = "Tasin"
-const msg = "Hello, " + name + ". You have " + (2 + 3) + " messages."
+
+// purano way
+const msg = "Hello " + name + ", welcome back."
+
+// template literal
+const msg = `Hello ${name}, welcome back.`
 ```
 
-With template literals:
+Math ba condition o direct dewa jai:
+
 ```js
-const msg = `Hello, ${name}. You have ${2 + 3} messages.`
+const total = `Total: ${price * quantity} taka`
+const status = `User is ${isOnline ? "online" : "offline"}`
 ```
 
-They also support multi-line strings without any special characters:
+Multi line string o easily likhha jai:
+
 ```js
-const html = `
-  <div>
-    <h1>${name}</h1>
-    <p>Welcome back.</p>
-  </div>
+const card = `
+  Name: ${user.name}
+  Email: ${user.email}
+  Role: ${user.role}
 `
-```
-Anything inside `${}` is evaluated as JavaScript, so you can put expressions, function calls, or ternaries in there:
-```js
-const status = `User is ${isLoggedIn ? "online" : "offline"}`
 ```
