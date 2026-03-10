@@ -40,8 +40,6 @@ console.error("Error loading issues", error)
 
 }
 
-
-// DISPLAY ISSUE CARDS
 function displayIssues(list){
 
 const container = document.getElementById("issuesContainer")
@@ -72,9 +70,10 @@ priorityColor = "badge-warning"
 }
 
 
-// FIXED LABEL HANDLING
-const label =
-issue.label || issue.labels?.[0] || "No label"
+
+const labels = issue.labels?.length
+? issue.labels
+: [issue.label || "No label"]
 
 
 const card = document.createElement("div")
@@ -110,10 +109,8 @@ ${issue.description}
 </p>
 
 
-<div>
-<span class="badge badge-outline">
-${label}
-</span>
+<div class="flex flex-wrap gap-1">
+${labels.map(l => `<span class="badge badge-outline">${l}</span>`).join("")}
 </div>
 
 </div>
@@ -212,8 +209,16 @@ const issue = data.data
 document.getElementById("modalTitle").innerText = issue.title
 document.getElementById("modalDesc").innerText = issue.description
 document.getElementById("modalAuthor").innerText = issue.author
-document.getElementById("modalLabel").innerText =
-issue.label || issue.labels?.[0] || "No label"
+
+// FIXED: Modal এও সব labels দেখাও
+const modalLabelEl = document.getElementById("modalLabel")
+const modalLabels = issue.labels?.length
+? issue.labels
+: [issue.label || "No label"]
+
+modalLabelEl.innerHTML = modalLabels
+.map(l => `<span class="badge badge-outline">${l}</span>`)
+.join(" ")
 
 document.getElementById("modalAssignee").innerText =
 issue.assignee || "Unassigned"
@@ -251,10 +256,6 @@ priority === "high"
 : priority === "medium"
 ? "badge badge-warning"
 : "badge badge-info"
-
-
-
-
 
 
 document.getElementById("issueModal").showModal()
